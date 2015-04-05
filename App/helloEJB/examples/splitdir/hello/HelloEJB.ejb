@@ -1,0 +1,39 @@
+package examples.splitdir.hello;
+
+import examples.splitdir.hello.apputils.AppUtils;
+
+import weblogic.ejb.GenericSessionBean;
+import weblogic.ejbgen.Constants;
+import weblogic.ejbgen.Session;
+import weblogic.ejbgen.JndiName;
+import weblogic.ejbgen.LocalMethod;
+import javax.ejb.CreateException;
+import java.util.Properties;
+
+/**
+ * <p>Simple HelloWorld example of session ejb using EJBGen.</p>
+ *
+ * @author Copyright (c) 2011 by BEA Systems, Inc. All Rights Reserved.
+ */
+@JndiName(local = "com.bea.examples.hello.HelloEJB")
+@Session(maxBeansInFreePool = "1000",
+         initialBeansInFreePool = "0",
+         transTimeoutSeconds = "0",
+         type = Session.SessionType.STATELESS,
+         defaultTransaction = Constants.TransactionAttribute.REQUIRED,
+         ejbName = "HelloEJB",
+         enableCallByReference = Constants.Bool.TRUE)
+public class HelloEJB extends GenericSessionBean {
+
+  private static final String IDENTITY_NAME = "hello.ejb.identity";
+  private Properties myProps = null;
+
+  public void ejbCreate() throws CreateException {
+    myProps = AppUtils.getAppUtils().getProps();
+  }
+
+  @LocalMethod()
+  public String sayHello(){
+    return "Hello from " + myProps.getProperty(IDENTITY_NAME);
+  }
+}

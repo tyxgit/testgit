@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file contains meta-data about the associated example.  
+This file and its contents are not required to build, deploy, 
+or execute the example.  The meta-data is intend for Oracle
+internal use only.
+
+Copyright (c) 2003,2011, Oracle and/or its affiliates. All rights reserved.
+-->
+<example
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://samples.beasys.com/example.xsd">
+  <name>WebLogic Split Development Directory Structure</name>
+  <description>Demonstrates how to use the WebLogic split development directory structure and associated Ant tasks to build, package, and deploy Enterprise Applications.</description>
+  <date>2003-11-06-08:00</date>
+  <author>Oracle</author>
+  <version>1.0</version>
+  <package>examples.splitdir.helloWorldEar</package>
+  <zip>splitdir_helloWorldEar</zip>
+  <wlsCompatibility>9.0</wlsCompatibility>
+  <parentCategory>Development</parentCategory>
+  <childCategory>Split Development</childCategory>
+  <subCategory/>
+  <wlsConfiguration/>
+  <coconutTests>
+    <buildTest><![CDATA[
+    <test name="build-splitdir">
+      <ant-task>
+        <ant dir="${examples.src.dir}/examples/splitdir/helloWorldEar"/>
+        <sleep seconds="5"/>
+      </ant-task>
+    </test>
+      <test name="deploy-splitdir" requiresSuccess="build-splitdir">
+      <ant-task>
+        <ant dir="${examples.src.dir}/examples/splitdir/helloWorldEar" target="deploy"/>
+        <sleep seconds="5"/>
+      </ant-task>
+    </test>]]>
+    </buildTest>
+    <executeTest><![CDATA[
+      <test name="run-http-splitdir/helloWorldEar/helloWebApp" requiresSuccess="deploy-splitdir">
+      <http-url-connection target="/helloWebApp/hello.jsp"
+        connectionmode="GET"
+        checkmode="RESPONSE_STRING"
+        sendcookie="false" >
+        <expectedstring regexp="true">.*?Our EJB return value is*?</expectedstring>
+      </http-url-connection>
+    </test>]]>
+    </executeTest>
+  </coconutTests>
+  <build>
+    <deployable>true</deployable>
+  </build>
+  <execution>
+    <url>helloWebApp/hello.jsp</url>
+  </execution>
+
+</example>

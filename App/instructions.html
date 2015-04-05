@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><!-- InstanceBegin template="/Templates/instructions_template.dwt" codeOutsideHTMLIsLocked="false" -->
+  <head>
+  <!-- InstanceBeginEditable name="doctitle" -->
+<title>WebLogic Split Development Directory Structure</title>
+<!-- InstanceEndEditable -->
+  
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+  
+  <link href="../../../../../docs/css/samples.css" rel="stylesheet" title="Style" type="text/css" />
+  
+  <script language="JavaScript" src="../../../../../docs/core/topicInfo.js" type="text/JavaScript"></script>
+  <script language="JavaScript" src="../../../../../docs/core/CookieClass.js" type="text/JavaScript"></script>
+  <script language="JavaScript" src="../../../../../docs/core/displayContent.js" type="text/JavaScript"></script>
+  
+  <!-- InstanceBeginEditable name="head" -->
+  <style type="text/css">
+<!--
+.style4 {font-family: "Courier New"}
+-->
+  </style>
+  <!-- InstanceEndEditable -->
+	
+<a href="../../../../../docs/core/index.html"></a>
+
+</head>
+
+<body>
+
+	<script language="JavaScript" type="text/JavaScript">
+		try {
+			displayInFrames();
+		}
+		catch (e) {
+		document.write("<table width='100%'><tr><td bgcolor='#19355E' align='left' height='42'; valign='top'><p style='color:white;font-size:130%;font-weight:bold;margin-top:4px;margin-bottom:0;'>WebLogic Server<sup>&reg;</sup> 10.0</p><p style='color:white;font-size:110%;margin-top:2px;margin-bottom:4px;'>Code Examples</p></td></tr></table>");
+			}
+	</script>
+
+  <h1> <script language="JavaScript" type="text/JavaScript">document.write(document.title);</script></h1>
+  <p> 
+  	<a class="navbutton" href="#files">&nbsp;Files&nbsp;</a> 
+	<a class="navbutton" href="#prepare">&nbsp;Prepare&nbsp;</a> 
+	<a class="navbutton" href="#run">&nbsp;Run&nbsp;</a> 
+	<a class="navbutton" href="#troubleshooting" >&nbsp;Troubleshooting&nbsp;</a>	
+	<a class="navbutton" href="#related_topics">&nbsp;Related Topics&nbsp;</a> 
+  </p> 
+
+<h2>About the Example </h2>
+<!-- InstanceBeginEditable name="about" -->
+<p>This example illustrates how to use the WebLogic split development directory structure and associated Ant tasks to build, package, and deploy Enterprise Applications. </p>
+<p>The example folder contains a subdirectory, <span class="style4"><font size="-1">helloWorldEar</font></span>, that represents the project directory for the Enterprise Application. All subdirectories within <font face="Courier New" size="-1">helloWorldEar</font> follow the split development directory structure for storing source files, and are described below.</p>
+<!-- InstanceEndEditable -->
+<hr />
+<a name="files" id="files"></a>
+<h2>Files Used in the Example</h2>
+<p class="smaller" >Directory Location:</p>
+<p class="smaller" style="font-family:'Courier New',monospace;" ><em>MW_HOME</em>/wlserver_10.3/samples/server/examples/<!-- InstanceBeginEditable name="PATHTOEXAMPLE" -->src/examples/splitdir/HelloWorldEar/<!-- InstanceEndEditable --></p>
+<p class="smaller" >(where <span style="font-style:italic;font-family:'Courier New',monospace;COLOR: #000000;">MW_HOME</span> is the directory containing your WebLogic Server installation)</p>
+
+<!-- InstanceBeginEditable name="files" -->
+<table border="1" cellpadding="3" cellspacing="0" >
+  <tr> 
+    <th><p>File</p>
+      <p style="font-size:75%;font-weight:normal;margin-top:0em">Click source 
+        files to view code.</p></th>
+    <th><p>Description</p></th>
+  </tr>
+  <tr bgcolor="white" class="TableRowColor">
+    <td><a href="build.xml" target="_blank">build.xml</a></td>
+    <td>The Ant script that builds, packages, and deploys <font face="Courier New" size="-1">helloWorldEar</font> and its components.</td>
+  </tr>
+  <tr bgcolor="white" class="TableRowColor">
+    <td><a href="APP-INF/classes/applicationresource.properties" target="_blank">APP-INF/classes/applicationresource.properties</a></td>
+    <td>A properties file whose values are read by the application utility class. The contents are used to construct the "hello world" message.</td>
+  </tr>
+</table>
+<!-- InstanceEndEditable -->
+<hr />
+
+<a name="prepare" id="prepare"></a>
+<h2>Prepare the Example</h2>
+<!-- InstanceBeginEditable name="build" -->
+
+
+<h3>Prerequisites</h3>
+<p>Before working with this example: </p>
+<ol>
+  <li><a href="http://download.oracle.com/docs/cd/E23943_01/web.1111/../doc.1111/e14142/toc.htm" target="_blank">Install
+      WebLogic Server</a>, including the
+      examples.</li>
+  <li><a href="javascript:reloadTOC('../../examples.html#startServer')">Start
+      the Examples server.</a></li>
+  <li><a href="javascript:reloadTOC('../../examples.html#environment')">Set
+      up your environment</a>.</li>
+</ol>
+<p>The <font face="Courier New"
+size="-1">examples.splitdir.helloWorldEar</font> example provides the source for a simple but complete Enterprise Application that conforms to the WebLogic split development directory structure. Because the example uses this directory structure, you can use WebLogic Ant tasks to easily compile, package, and deploy either the whole application or individual components of the application. </p>
+
+<p>The <font size="-1"></font><font face="Courier New" size="-1"> helloWorldEar</font>  directory holds all of the source files for the Enterprise Application. Examine the layout of the directories and components in the <font face="Courier New" size="-1">helloWorldEar</font> directory, as described below: </p>
+<ul>
+  <li><font face="Courier New"
+size="-1">APP-INF/classes</font> contains a properties file, <font face="Courier New"
+size="-1">applicationresource.properties</font>, that is read by a utility class in the Enterprise Application. In your own applications, <font face="Courier New" size="-1">APP-INF/classes</font> can store any resources that are shared by classes in the application.
+        <p> </p>
+  </li>
+  <li><font face="Courier New" size="-1">APP-INF/lib</font> contains a completed .jar file, <font face="Courier New"
+size="-1">GenericResourceLoader.jar</font>. In your own applications, you can place any third-party utility .jars in <font face="Courier New" size="-1">APP-INF/lib</font>. (The source for <font face="Courier
+New" size="-1">GenericResourceLoader.jar</font> can be found in the <font face="Courier New" size="-1">examples/common/thirdparty</font> directory.)
+        <p> </p>
+  </li>
+  <li><font face="Courier New" size="-1">appStartup</font> and <font
+face="Courier New" size="-1">appUtils</font> contain the source for two classes. <font face="Courier New" size="-1">appStartup</font> is a simple class that uses Application Lifecycle Events to initialize the <font face="Courier New"
+size="-1">applicationresources.properties</font> file when you redeploy the application. It initializes the file using <span class="style4"><font size="-1">appUtils</font></span>. <font face="Courier New"
+size="-1">appUtils</font> is a utility class that uses <font
+face="Courier New" size="-1">GenericResourceLoader.jar</font> to read the contents of the properties file. <font face="Courier New"
+size="-1">appUtils</font> is called by an EJB to display the "hello" message. In both subdirectories, the .java source files are stored in subdirectories that reflect their package structures.
+        <p>In your own applications, source files for supporting and utility classes can be stored in any subdirectory of the Enterprise Application project directory; the <font face="Courier New"
+size="-1">wlcompile</font> Ant task automatically compiles these classes into the <font face="Courier New"
+size="-1">APP-INF/classes</font> directory of the final Enterprise Application so they can be accessed by other components. </p>
+  </li>
+  <li><font face="Courier New" size="-1">build.xml</font> is the Ant build file used to build and deploy the sample application. When you store your own source files using the split development directory structure, you can use the <font face="Courier New"
+size="-1">weblogic.BuildXMLGen</font> utility to automatically create the <font face="Courier New" size="-1">build.xml</font> file for you with common build targets.
+        <p>The installed <font face="Courier New" size="-1">build.xml</font> file has several differences from a file generated by <font
+face="Courier New" size="-1">weblogic.BuildXMLGen</font>: </p>
+        <ul>
+          <li>It uses the properties file installed with the WebLogic Server Examples to use common directories. </li>
+          <li>It uses the <font size="-1" class="style4">exclude</font> option of <span class="style4"><font size="-1">wlcompile</font></span> to control the order in which components are compiled. </li>
+        </ul>
+        <p>You can examine these differences by generating a separate <font
+face="Courier New" size="-1">build.xml</font> file with <font
+face="Courier New" size="-1">weblogic.BuildXMLGen</font> in a separate directory. However, the instructions that follow assume you are using the installed file. </p>
+  </li>
+  <li><font face="Courier New" size="-1">helloEJB</font> contains the source for an EJB used in the Enterprise Application. This EJB calls the <font face="Courier New" size="-1">appUtils</font> class to display the "hello" message. Notice that this directory only contains the EJB source file, stored in its package subdirectory. The deployment descriptor files for the EJB are generated automatically using <font
+face="Courier New" size="-1">ejbgen</font> tags embedded in the source. The <font face="Courier New" size="-1">wlcompile</font> task automatically runs <font face="Courier New" size="-1">ejbgen</font> for EJB source files that use a .ejb extension.
+        <p> </p>
+  </li>
+  <li><font face="Courier New" size="-1">helloWebApp</font> contains .jsp and .java source files for the Web Application component of the Enterprise Applications. JSPs and static files can be stored in the top-level of a Web Application subdirectory. Servlets and supporting .java files should be stored in the <font face="Courier New"
+size="-1">WEB-INF/src</font> subdirectory in subdirectories that reflect the class package. (The .java file in this example is not a Servlet, but a utility class used only by the JSP in this Web Application.)
+        <p><font face="Courier New" size="-1">helloWebApp/WEB-INF</font> also contains the deployment descriptors for the Web Application. </p>
+        <p> </p>
+  </li>
+  <li><font face="Courier New" size="-1">META-INF</font> contains the deployment descriptor files for the Enterprise Application. </li>
+</ul>
+<p> To get the most out of this example, examine the layout of the subdirectories and use the same directory structure for your own Enterprise Applications. Doing so allows you to maintain source and editable files completely separate from compiled and generated files. You can also  use the WebLogic Ant tasks to easily perform repeated builds and deployments. </p>
+<h3>Configure WebLogic Server</h3>
+<p>&nbsp;&nbsp;No special configuration is
+  required for this example</p>
+<a name="build" id="build"></a>
+<h3>Build and Deploy the Example</h3>
+<p>To build the example, follow these steps: </p>
+
+<ol>
+  <li>Open a new command shell and <a href="javascript:reloadTOC('../../examples.html#environment')">set your environment</a> using the <span class="style4"><font size="-1">setExamplesEnv.cmd</font></span> or <span class="style4"><font size="-1">setExamplesEnv.sh</font></span> script.
+          <p></p>
+  </li>
+  <li>Move to the project directory to where the <span class="style4"><font size="-1">build.xml</font></span> script is located:
+      <p class="style4"> <font size="-1">cd %SAMPLES_HOME%\server\examples\src\examples\splitdir\helloWorldEar</font> </p>
+  </li>
+  <li>Use the following command to display the available targets in <font face="Courier New" size="-1">build.xml</font>
+      <p><font face="Courier New" size="-1">ant -projecthelp</font></p>
+      <p>Typical output will look like this:</p>
+<p></p><tt>Buildfile: build.xml<br /><br />
+    Main targets:</tt><br /><br />
+     <table height="180" border="0" cellpadding="0" cellspacing="0" bordercolor="white">
+	 <tr><td width="174" height="0" align="left" valign="top"><tt>appc</tt></td> <td width="466" height="0" align="left" valign="top"><tt>Runs weblogic.appc on your application</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>build</tt></td> <td align="left" valign="top"><tt>Compiles helloWorldEar application and runs appc</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>build.appStartup</tt></td> <td align="left" valign="top"><tt>Builds just the appStartup module of the application</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>build.appUtils</tt></td> <td align="left" valign="top"><tt>Builds just the appUtils module of the application</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>build.helloEJB</tt></td> <td align="left" valign="top"><tt>Builds just the helloEJB module of the application</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>build.helloWebApp</tt></td> <td align="left" valign="top"><tt>Builds just the helloWebApp module of the application</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>clean</tt></td> <td align="left" valign="top"><tt>Deletes the build and distribution directories</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>compile</tt></td> <td align="left" valign="top"><tt>Only compiles helloWorldEar application, no appc</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>deploy</tt></td> <td align="left" valign="top"><tt>Deploys (and redeploys) the entire helloWorldEar application</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>descriptors</tt></td> <td align="left" valign="top"><tt>Generates application and module descriptors</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>ear</tt></td> <td align="left" valign="top"><tt>Package a standard Java EE EAR for distribution</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>javadocs</tt></td> <td align="left" valign="top"><tt>Generate SplitDir HelloWorld javadocs.</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>redeploy.helloEJB</tt></td> <td align="left" valign="top"><tt>Redeploys just the helloEJB module of the application</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>redeploy.helloWebApp</tt></td> <td align="left" valign="top"><tt>Redeploys just the helloWebApp module of the application</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>run</tt></td> <td align="left" valign="top"><tt> Run example.</tt><br /></td></tr>
+  <tr><td align="left" valign="top"><tt>undeploy</tt></td> <td align="left" valign="top"><tt>UnDeploys the entire helloWorldEar application</tt></td>
+  </tr></table><br />
+  <tt>Default target: build</tt>
+<p>These correspond to the default targets that would be generated in a <font face="Courier New" size="-1">build.xml</font> file created by <font face="Courier New" size="-1">weblogic.BuildXMLGen</font>. Targets are provided to build and deploy the entire Enterprise Application as well as individual components. There are also targets available to package the application as a .EAR file and undeploy or redeploy the application. </p>
+  </li>
+  <li>To compile the application, enter the command:
+      <p><font face="Courier New" size="-1">ant build</font> </p>
+      <p>This compiles all components of the application and places them in the samples <font face="Courier New" size="-1">build</font> subdirectory (<code><em>WL_HOME</em>\samples\server\examples\build</code>). If you examine the contents of this directory, you'll see that it contains only compiled classes and generated deployment descriptors. All of the source files and editable deployment descriptors remain in the original project directory. This is one of the key benefits of using the WebLogic split development directory - you don't have to stage or package the application before deploying it to the server. WebLogic Server can deploy the <font
+face="Courier New" size="-1">build</font> directory by locating the necessary editable descriptor files in the source directory, as you'll see in the next step. </p>
+      <p></p>
+  </li>
+  <li>Now that you've built the application, use the <span class="style4"><font size="-1">deploy</font></span> target to deploy it to the Examples server:
+      <p><font face="Courier New" size="-1">ant deploy</font> </p>
+      <p>The <font face="Courier New" size="-1">deploy</font> target uses the <font face="Courier New" size="-1">wldeploy</font> Ant task to deploy the application from the <font face="Courier New"
+size="-1">deploy</font> directory. Editable files required for deployment (the Enterprise Application and Web Application deployment descriptors) are obtained from the project directory by reading the <font face="Courier New" size="-1">.beabuild.txt</font> file stored in the <font face="Courier New" size="-1">/build/helloWorldEar</font> directory. </p>
+      <p>The <font face="Courier New" size="-1">build</font> directory contains no editable files, so it can be easily removed and replaced as you develop your applications. </p>
+      <p><b>Note:</b> To improve the performance of the build and deploy operations, you can combine both targets on a single command line: </p>
+      <p><t><font face="Courier New" size="-1">ant build deploy</font> </p>
+  </li>
+  <li>The <font face="Courier New" size="-1">build.xml</font> file also contains a target you can use to package the application:
+      <p><font face="Courier New" size="-1">ant ear</font> </p>
+      <p>This target starts by compiling the entire Enterprise Application using <font face="Courier New" size="-1">wlcompile</font>. Then, it uses the <font face="Courier New" size="-1">wlpackage</font> task to generates a standard .ear file, obtaining necessary files from both the <font face="Courier New" size="-1">build</font> and <font face="Courier New" size="-1">project</font> directories. You can find the complete .ear file in the samples <font
+face="Courier New" size="-1">\build\dist</font> subdirectory. </p>
+  </li>
+</ol>
+<!-- InstanceEndEditable -->
+<hr />
+<a name="run" id="run"></a>
+<h2>Run the Example</h2>
+<!-- InstanceBeginEditable name="run" -->
+<ol>
+  <li>Complete the steps in the &quot;<a href="#prepare">Prepare
+      the Example</a>&quot; section.</li>
+  <li>Execute the following command from
+    the shell where you <a href="javascript:reloadTOC('../../examples.html#environment')">set
+    your environment</a> (this would be <span class="style4"><font size="-1">%SAMPLES_HOME%\server\examples\src\examples\splitdir\helloWorldEar</font></span> using the instructions above): <br />
+      <br />
+      <code>ant run </code><br />
+      <br />
+    This command will open  your browser
+    to the URL:<br />
+    <br />
+    <font face="Courier New" size="-1">http://<em>wls_hostname</em>:<em>wls_port</em>/helloWebApp</font> <br />
+    <br />
+    This
+    accesses the .jsp in the Enterprise Application's
+    Web Application. The last line of the
+    output is obtained by calling the Enterprise
+    Application's EJB. The EJB obtains the
+    information to print by accessing the
+    utility class, which retrieves the text
+    from the properties file. <br />
+    <br />
+    You can change
+    the last line of output by editing the
+    properties file (<font face="Courier New"
+size="-1">applicationresource.properties</font>) with a text editor. Simply
+  change the value of <span class="style4"><font size="-1">hello.ejb.identity</font></span> and redeploy the application. The <font face="Courier New" size="-1">appStartup</font> class detects the deployment and loads the file, so that the new message is displayed when you next access the JSP. <font
+face="Courier New" size="-1">appStartup</font> also logs a message in the server's log file in response to the deployment event; you can view these messages in the <font face="Courier New"
+size="-1">examples.log</font> file in the Examples server root directory. </li>
+</ol>
+<!-- InstanceEndEditable -->
+<hr />
+<h2>Troubleshooting</h2>
+<a name="troubleshooting" id="troubleshooting"></a>
+<!-- InstanceBeginEditable name="troubleshooting" --> 
+<ul>
+  <li><a href="javascript:reloadTOC('../../examples.html#troubleshooting')">General
+    Troubleshooting Tips for Examples</a></li>
+</ul>
+<!-- InstanceEndEditable -->
+<hr />
+<h2>Related Topics</h2>
+<p class="smaller">(Internet connection required.)</p>
+<a name="related_topics" id="related_topics"></a> 
+<!-- InstanceBeginEditable name="related_topics" -->
+<ul>
+  <li><a href="http://download.oracle.com/docs/cd/E23943_01/web.1111/e13706/toc.htm" target="_blank">Developing
+    Applications with WebLogic Server</a></li>
+
+</ul>
+<!-- InstanceEndEditable -->
+
+<hr />	
+<p><a href="../../copyright.html">Copyright</a> © 1996, 2011, Oracle and/or its affiliates. All  Rights Reserved. </p>
+
+</body>
+<!-- InstanceEnd --></html>

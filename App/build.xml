@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="helloWorldEar" default="build" basedir=".">
+
+  <!-- This build file was automatically generated at 11:15:15 AM on Mar 10, 2003 by weblogic.BuildXMLGen -->
+
+  <!-- BUILD PROPERTIES ADJUST THESE FOR YOUR ENVIRONMENT -->
+  <property environment="env"/>
+  <property file="../../../examples.properties"/>
+  <property name="dist.dir" value="${examples.build.dir}/dist"/>
+  <property name="app.name" value="helloWorldEar" />
+  <property name="ear" value="${dist.dir}/${app.name}.ear"/>
+  <property name="user" value="${wls.username}" />
+  <property name="password" value="${wls.password}" />
+  <property name="servername" value="${wls.server.name}" />
+  <property name="src.dir" value="." />
+  <property name="dest.dir" value="${examples.build.dir}/${app.name}" />
+
+  <!-- Builds the entire helloWorldEar application -->
+  <target name="build"
+    description="Compiles helloWorldEar application and runs appc" 
+    depends="compile, appc" />
+
+  <!-- Only compiles helloWorldEar application, no appc -->
+  <target name="compile"
+          description="Only compiles helloWorldEar application, no appc"
+          depends="copy.files">
+    <wlcompile srcdir="${src.dir}" destdir="${dest.dir}" excludes="appStartup">
+      <ejbgen source="${sourceVersion}"/>
+      <javac deprecation="${deprecation}" />
+      <javac debug="${debug}" debugLevel="${debugLevel}" />
+    </wlcompile>
+    <ant target="build.appStartup"/>
+  </target>
+
+  <!-- copy files for split directory deployment -->
+  <target name="copy.files"
+          description="Copy jsp header and footer from the common places">
+    <copy todir="${src.dir}/helloWebApp">
+      <fileset dir="${examples.src.dir}/examples/common/base/webapp">
+        <include name="ExamplesFooter.jsp"/>
+        <include name="ExamplesHeader.jsp"/>
+        <include name="wls_examples.css"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${src.dir}/helloWebApp/images"/>
+    <copy todir="${src.dir}/helloWebApp/images">
+      <fileset dir="${examples.src.dir}/examples/images">
+        <include name="oracle_logo.gif"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- Runs weblogic.appc on your application -->
+  <target name="appc" description="Runs weblogic.appc on your application">
+    <wlappc source="${dest.dir}" deprecation="${deprecation}" debug="${debug}"/>
+  </target>
+   
+  <!-- Builds just appStartup of the application -->
+  <target name="build.appStartup" description="Builds just the appStartup module of the application">
+    <wlcompile srcdir="${src.dir}" destdir="${dest.dir}"
+               includes="appStartup">
+      <ejbgen source="${sourceVersion}"/>
+      <javac deprecation="${deprecation}" />
+      <javac debug="${debug}" debugLevel="${debugLevel}" />
+    </wlcompile>
+  </target>
+
+  <!-- Builds just helloEJB of the application -->
+  <target name="build.helloEJB" description="Builds just the helloEJB module of the application">
+    <wlcompile srcdir="${src.dir}" destdir="${dest.dir}"
+               includes="helloEJB">
+      <ejbgen source="${sourceVersion}"/>
+      <javac deprecation="${deprecation}" />
+      <javac debug="${debug}" debugLevel="${debugLevel}" />
+    </wlcompile>
+  </target>
+
+  <!-- Builds just appUtils of the application -->
+  <target name="build.appUtils" description="Builds just the appUtils module of the application">
+    <wlcompile srcdir="${src.dir}" destdir="${dest.dir}"
+               includes="appUtils" >
+      <ejbgen source="${sourceVersion}"/>
+      <javac deprecation="${deprecation}" />
+      <javac debug="${debug}" debugLevel="${debugLevel}" />
+    </wlcompile>
+  </target>
+
+  <!-- Builds just helloWebApp of the application -->
+  <target name="build.helloWebApp" description="Builds just the helloWebApp module of the application">
+    <wlcompile srcdir="${src.dir}" destdir="${dest.dir}"
+               includes="helloWebApp">
+      <ejbgen source="${sourceVersion}"/>
+      <javac deprecation="${deprecation}" />
+      <javac debug="${debug}" debugLevel="${debugLevel}" />
+    </wlcompile>
+  </target>
+
+
+  <!-- Deploys the entire helloWorldEar application -->
+  <target name="deploy" description="Deploys (and redeploys) the entire helloWorldEar application">
+    <wldeploy user="${user}" password="${password}"
+              adminurl="t3://${wls.hostname}:${wls.port}"
+              action="deploy" source="${dest.dir}"
+              name="helloWorldEar"
+              failonerror="${failondeploy}"/>
+  </target>
+
+  <!-- UnDeploys the entire helloWorldEar application -->
+  <target name="undeploy" description="UnDeploys the entire helloWorldEar application">
+    <wldeploy user="${user}" password="${password}"
+              adminurl="t3://${wls.hostname}:${wls.port}"
+              action="undeploy" name="helloWorldEar"
+              failonerror="${failondeploy}"/>
+  </target>
+
+  <!-- Redeploys just helloEJB of the application -->
+  <target name="redeploy.helloEJB" description="Redeploys just the helloEJB module of the application">
+    <wldeploy user="${user}" password="${password}"
+              adminurl="t3://${wls.hostname}:${wls.port}"
+              action="redeploy"  targets="helloEJB@${servername}"
+              name="helloWorldEar"
+              failonerror="${failondeploy}"/>
+  </target>
+
+  <!-- Redeploys just helloWebApp of the application -->
+  <target name="redeploy.helloWebApp" description="Redeploys just the helloWebApp module of the application">
+    <wldeploy user="${user}" password="${password}"
+              adminurl="t3://${wls.hostname}:${wls.port}"
+              action="redeploy"  targets="helloWebApp@${servername}"
+              name="helloWorldEar"
+              failonerror="${failondeploy}"/>
+  </target>
+
+ <!-- Generates descriptors for applicaiton and modules 
+    Only required if your application does not have any descriptors.  Only required to run once -->
+ <target name="descriptors" depends="compile" description="Generates application and module descriptors">
+    <ddcreate dir="${dest.dir}" />
+  </target>
+ 
+ <!-- Package a standard J2EE ear for distribution  -->
+  <target name="ear" depends="build" description="Package a standard J2EE EAR for distribution">
+    <mkdir dir="${dist.dir}"/>
+    <wlpackage srcdir="${src.dir}" destdir="${dest.dir}"
+               toFile="${ear}" />
+  </target>
+  
+  <!-- run the example -->
+	<target name="run" description="Run example.">
+	 <openbrowser
+	    url="http://${wls.hostname}:${wls.port}/helloWebApp"/>
+  </target>
+
+  <target name="clean" description="Deletes the build and distribution directories">
+    <delete dir="${dest.dir}" />
+    <delete dir="${dist.dir}" />
+    <!-- also remove common files -->
+    <delete dir="${src.dir}/helloWebApp/images"/>
+    <delete file="${src.dir}/helloWebApp/ExamplesFooter.jsp"/>
+    <delete file="${src.dir}/helloWebApp/ExamplesHeader.jsp"/>
+    <delete file="${src.dir}/helloWebApp/wls_examples.css"/>
+  </target>
+
+  <!--  #####  G E N E R A T E   S P L I T D I R   D O C S  ####  -->
+  <target name="javadocs" description="Generate SplitDir HelloWorld javadocs.">
+    <javadoc
+      packagenames="examples.splitdir.hello.*"
+      destdir="${src.dir}/javadoc"
+      classpath="${wl.home}/server/weblogic.jar;${java.class.path};${src.dir}/APP-INF/lib/GenericResourceLoader.jar"
+      sourcepath="${src.dir}/appStartup;${src.dir}/appUtils;${src.dir}/helloWebApp/WEB-INF/src;${dest.dir}/helloEJB"
+      overview="${src.dir}/javadoc/package.html"
+      author="true"
+      version="true"
+      access="public"
+      use="true"
+      nodeprecatedlist="true"
+      nohelp="true"
+      noindex="true"
+      windowtitle="Split Development Directory Hello World EAR"
+      additionalparam="-breakiterator -tag ejbgen\:automatic-key-generation:X -tag ejbgen\:cmr-field:X -tag ejbgen\:create-default-dbms-tables:X -tag ejbgen\:ejb-local-ref:X -tag ejbgen\:ejb-ref:X -tag ejbgen\:entity:X -tag ejbgen\:env-entry:X -tag ejbgen\:file-generation:X -tag ejbgen\:finder:X -tag ejbgen\:jndi-name:X -tag ejbgen\:local-method:X -tag ejbgen\:message-driven:X -tag ejbgen\:primkey-field:X -tag ejbgen\:relation:X -tag ejbgen\:remote-method:X -tag ejbgen\:resource-ref:X -tag ejbgen\:session:X -tag ejbgen\:cmp-field:X -tag ejbgen\:jar-settings:X -tag ejbgen\:select:X -tag ejbgen\:relationship-caching-element:X"
+      failonerror="false">
+      <doctitle><![CDATA[<h1>Hello World Split Development Directory EAR</h1>]]></doctitle>
+      <header>&lt;/td&gt;&lt;td valign=bottom align=right&gt;&lt;b&gt;WebLogic Server ${MAJOR}.${MINOR} Code Examples&lt;/b&gt;, Oracle and/or its affiliates.&lt;/td&gt;</header>
+      <footer>&lt;/td&gt;&lt;td valign=bottom align=right&gt;Documentation is available at&lt;br&gt; &lt;a href=http://download.oracle.com/docs/cd/E23943_01/web.1111/wls.htm&gt;Oracle Fusion Middleware Documentation Library&lt;/a&gt;&lt;/td&gt;</footer>
+      <bottom>&lt;a href=http://www.oracle.com/html/copyright.html&gt;Copyright&lt;/a&gt; &amp;copy; 2003,2011, Oracle and/or its affiliates. All Rights Reserved.</bottom>
+    </javadoc>
+  </target>
+
+</project>
+
